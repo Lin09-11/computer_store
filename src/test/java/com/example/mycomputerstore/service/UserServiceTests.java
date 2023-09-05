@@ -51,4 +51,18 @@ public class UserServiceTests {
         userService.changePassword(7,"管理员",
                 "123","321");
     }
+
+    @Test
+    public void getByUid(){
+        System.out.println(userService.getByUid(2));
+    }
+
+    @Test
+    public void changeInfo(){
+        User user = new User();
+        user.setPhone("1212121");
+        user.setGender(1);
+        user.setEmail("whqhiw@");
+        userService.changeInfo(2,"管理员",user);
+    }
 }

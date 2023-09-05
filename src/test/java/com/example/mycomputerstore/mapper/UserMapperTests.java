@@ -49,4 +49,16 @@ public class UserMapperTests {
                 "321","管理员",new Date());
 
     }
+
+    @Test
+    public void updateInfoByUid(){
+        User user = new User();
+        user.setUid(3);
+        user.setPhone("123456");
+        user.setEmail("yyq");
+        user.setGender(1);
+        user.setModifiedUser("smy");
+        user.setModifiedTime(new Date());
+        userMapper.updateInfoByUid(user);
+    }
 }

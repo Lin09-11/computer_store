@@ -69,4 +69,23 @@
         from t_user where uid=#{uid};
     </select>
 
+
+    <update id="updateInfoByUid">
+        update t_user
+            <set>
+                <if test="phone!=null">
+                    phone=#{phone},
+                </if>
+                <if test="email!=null">
+                    email=#{email},
+                </if>
+                <if test="gender!=null">
+                    gender=#{gender},
+                </if>
+                modified_user=#{modifiedUser},
+                modified_time=#{modifiedTime}
+            </set>
+        where uid=#{uid}
+    </update>
+
 </mapper>

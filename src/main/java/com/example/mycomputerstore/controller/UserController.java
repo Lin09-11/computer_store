@@ -81,6 +81,13 @@ public class UserController extends BaseController {
 
     }
 
+    /**
+     * 修改用户密码
+     * @param oldPassword
+     * @param newPassword
+     * @param session 这里使用session，是因为要根据uid查询是哪一位用户，所以可以直接根据session来获取uid和username
+     * @return
+     */
     @PostMapping("/change_password")
     public JsonResult<Void> changePassword(String oldPassword,
                                            String newPassword,
@@ -88,6 +95,33 @@ public class UserController extends BaseController {
         Integer uid = getuidFromSession(session);
         String username = getUsernameFromSession(session);
         userService.changePassword(uid,username,oldPassword,newPassword);
+        return new JsonResult<>(OK);
+    }
+
+    /**
+     * 根据uid查询用户信息，并展示在页面
+     * @param session
+     * @return
+     */
+    @GetMapping("/get_by_uid")
+    public JsonResult<User> getByUid(HttpSession session){
+        User data = userService.getByUid(getuidFromSession(session));
+        return new JsonResult<>(OK,data);
+    }
+
+    /**
+     * 点击更新按钮，修改用户信息
+     * @param user
+     * @param session：这里使用session是为了获取用户的uid和username
+     * @return
+     */
+    @PostMapping("/change_info")
+    public JsonResult<Void> changeInfo(User user,HttpSession session){
+        //user对象有四部分数据：username,phone,email,gender
+        //uid数据需要再次封装到user中【SpringBoot实现依赖注入时，自动提交表单的数据，所以我们手动将用户的uid加入到user中】
+        Integer uid = getuidFromSession(session);
+        String username = getUsernameFromSession(session);
+        userService.changeInfo(uid,username,user);
         return new JsonResult<>(OK);
     }
 }

@@ -3,10 +3,7 @@ package com.example.mycomputerstore.service.impl;
 import com.example.mycomputerstore.entity.User;
 import com.example.mycomputerstore.mapper.UserMapper;
 import com.example.mycomputerstore.service.IUserService;
-import com.example.mycomputerstore.service.ex.InsertException;
-import com.example.mycomputerstore.service.ex.PasswordNotMatchException;
-import com.example.mycomputerstore.service.ex.UserNotFoundException;
-import com.example.mycomputerstore.service.ex.UsernameDuplicatedException;
+import com.example.mycomputerstore.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -141,6 +138,54 @@ public class UserServiceImpl implements IUserService {
         Integer rows = userMapper.updatePasswordByUid(uid, newMd5Password, username, new Date());
         if(rows!=1){
             throw new UserNotFoundException("更新数据产生未知的异常");
+        }
+    }
+
+    /**
+     * 根据用户的id查询用户的数据
+     * @param uid
+     * @return
+     */
+    @Override
+    public User getByUid(Integer uid) {
+        //判断用户是否存在
+        User result = userMapper.findByUid(uid);
+        if(result==null || result.getIsDelete()==1){
+            throw new UserNotFoundException("用户数据不存在");
+        }
+        /**
+         * 将数据直接传递给前端
+         */
+        User user = new User();
+        user.setUsername(result.getUsername());
+        user.setPhone(result.getPhone());
+        user.setGender(result.getGender());
+        user.setEmail(result.getEmail());
+        return user;
+    }
+
+    /**
+     * 更新用户的数据操作【SpringBoot实现依赖注入时，自动提交表单的数据，所以我们手动将用户的uid和username加入到user中】
+     * User中的数据phone email gender 手动将uid,username进行封装
+     * @param uid 用户的id
+     * @param username 用户的名称
+     * @param user 用户对象的数据
+     */
+    @Override
+    public void changeInfo(Integer uid, String username, User user) {
+        //判断用户是否存在
+        User result = userMapper.findByUid(uid);
+        if(result==null || result.getIsDelete()==1){
+            throw new UserNotFoundException("用户数据不存在");
+        }
+        user.setUid(uid);
+        user.setUsername(username);
+        //潜在参数
+        user.setModifiedTime(new Date());
+        user.setModifiedUser(username);
+        Integer rows = userMapper.updateInfoByUid(user);
+        if(rows!=1){
+            throw new UpdateException("更新数据时产生未知的异常");
         }
     }
 }

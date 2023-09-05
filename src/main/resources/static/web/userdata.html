@@ -262,6 +262,62 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+	<script type="text/javascript">
+		/*一旦检测到当前的页面被加载就会触发ready方法
+$(document).ready(function() {
+   //业务代码
+
+})*/
+		$(document).ready(function() {
+			$.ajax({
+				url: "/users/get_by_uid",
+				type: "GET",
+				dataType: "JSON",
+				success: function(json) {
+					if (json.state == 200) {
+						//将查询到的数据重新设置到控件中
+						//$("#控件名称")
+						//val表示给元素赋值，以参数的形式传递到文本框
+						$("#username").val(json.data.username);
+						$("#phone").val(json.data.phone);
+						$("#email").val(json.data.email);
+						$("#gender").val(json.data.gender);
+						let radio = json.data.gender == 0 ? $("#gender-female") : $("#gender-male");
+						//表示给某个元素添加属性和属性值[checked=checked]
+						radio.prop("checked", "checked");
+					} else {
+						alert("用户数据不存在 -> 原因：" + json.message);
+					}
+				},
+				error: function (xhr) {
+					alert("查询用户数据时产生未知的异常" + xhr.message);
+				}
+			});
+		});
+
+
+		$("#btn-change-info").click(function() {
+			$.ajax({
+				url: "/users/update_information",
+				type: "POST",
+				data: $("#form-change-info").serialize(),
+				dataType: "JSON",
+				success: function(json) {
+					if (json.state == 200) {
+						alert("用户信息修改成功");
+						location.href = "userdata.html";//修改完重新加载当前页面
+					} else {
+						alert("修改失败 -> 原因：" + json.message);
+					}
+				},
+				error: function (xhr) {
+					alert("未知的异常 在 修改用户信息" + xhr.message);
+					alert("....")
+					location.href = "login.html";
+				}
+			});
+		});
+	</script>
 	</body>
 
 </html>
