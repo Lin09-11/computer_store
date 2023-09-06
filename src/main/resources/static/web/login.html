@@ -156,6 +156,11 @@
 						//跳转到主页index.html
 						//相对路径来确定跳转的页面
 						location.href = "index.html";
+						//将服务器返回头像设置到Cookie中
+						//cookie(key,value,time)-->单位：天
+						$.cookie("avatar",
+								json.data.avatar,
+								{expires:7})
 					} else {
 						alert("登录失败 -> 原因：" + json.message);
 					}

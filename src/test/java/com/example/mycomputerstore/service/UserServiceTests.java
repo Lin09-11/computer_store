@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
+
 @SpringBootTest//表示标注当前的类是一个测试类，不会随同一块打包
 //RunWith:表示启动这个单元测试类，需要传递一个参数，必须是SpringBoot的实例对象
 @RunWith(SpringRunner.class)
@@ -64,5 +66,10 @@ public class UserServiceTests {
         user.setGender(1);
         user.setEmail("whqhiw@");
         userService.changeInfo(2,"管理员",user);
+    }
+
+    @Test
+    public void changeAvatar(){
+        userService.changeAvatar(2,"/upload/text.png", "管理员");
     }
 }

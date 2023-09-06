@@ -87,5 +87,15 @@
             </set>
         where uid=#{uid}
     </update>
+    <update id="updateAvatarByUid">
+        update t_user
+        set
+            avatar=#{avatar},
+            modified_time=#{modifiedTime},
+            modified_user=#{modifiedUser}
+        where
+            uid=#{uid}
+
+    </update>
 
 </mapper>

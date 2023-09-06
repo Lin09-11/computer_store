@@ -1,6 +1,7 @@
 package com.example.mycomputerstore.controller;
 
 
+import com.example.mycomputerstore.controller.ex.*;
 import com.example.mycomputerstore.service.ex.*;
 import com.example.mycomputerstore.utitl.JsonResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,24 +23,40 @@ public class BaseController {
     //自动将异常对象传递给此方法的参数列表上
     //当项目中产生异常，被统一拦截到此方法中，这个方法此时就充当是请求处理方法，方法的返回值直接给到前端
 
-    @ExceptionHandler(ServiceException.class)//统一处理抛出的异常
-    public JsonResult<Void> handleException(Throwable e){
-        JsonResult<Void> result = new JsonResult<>(e);
-        if(e instanceof UsernameDuplicatedException){
-            result.setState(4000);
-            result.setMessage("用户名已经被占用");
-        } else if(e instanceof UserNotFoundException){
-            result.setState(5001);
-            result.setMessage("用户数据不存在异常");
-        }else if(e instanceof PasswordNotMatchException){
-            result.setState(5002);
-            result.setMessage("用户名的密码错误异常");
-        }else if(e instanceof InsertException){
+    @ExceptionHandler({ServiceException.class, FileUploadException.class})
+    public JsonResult<Void> handleException(Throwable e) {
+        JsonResult<Void> result  = new JsonResult<>(e);
+
+        if(e instanceof UsernameDuplicatedException) {
             result.setState(5000);
-            result.setMessage("注册时产生未知的异常");
-        }else if(e instanceof UpdateException){
+            result.setMessage("用户名已存在");
+        } else if(e instanceof InsertException) {
+            result.setState(5001);
+            result.setMessage("注册时未知异常");
+        } else if(e instanceof UserNotFoundException) {
+            result.setState(5002);
+            result.setMessage("该用户不存在");
+        } else if(e instanceof PasswordNotMatchException) {
             result.setState(5003);
-            result.setMessage("更新数据时产生未知的异常");
+            result.setMessage("密码错误");
+        } else if(e instanceof UpdateException) {
+            result.setState(5004);
+            result.setMessage("更新数据的未知异常");
+        } else if(e instanceof FileEmptyException) {
+            result.setState(6000);
+            result.setMessage("头像文件为空");
+        } else if(e instanceof FileSizeException) {
+            result.setState(6001);
+            result.setMessage("文件大小不匹配");
+        } else if(e instanceof FileTypeException) {
+            result.setState(6002);
+            result.setMessage("文件类型错误");
+        } else if(e instanceof FileStateException) {
+            result.setState(6003);
+            result.setMessage("文件状态异常");
+        } else if(e instanceof FileUploadIOException) {
+            result.setState(6004);
+            result.setMessage("头像文件读取异常");
         }
         return result;
     }

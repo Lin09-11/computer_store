@@ -1,16 +1,20 @@
 package com.example.mycomputerstore.controller;
 
 
+import com.example.mycomputerstore.controller.ex.*;
 import com.example.mycomputerstore.entity.User;
 import com.example.mycomputerstore.service.IUserService;
 import com.example.mycomputerstore.utitl.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 //@RequestMapping("users")
 @RestController//RestController=@RequestMapping+@RequestBody
@@ -123,5 +127,82 @@ public class UserController extends BaseController {
         String username = getUsernameFromSession(session);
         userService.changeInfo(uid,username,user);
         return new JsonResult<>(OK);
+    }
+
+    /**
+     * MultipartFile接口是SpringMVC提供的一个接口，这个接口为我们包装了
+     * 获取文件类型的数据（任何类型的file都可以接收），Springboot它有整合了
+     * SpringMVC，只需要在处理请求的方法参数列表上声明一个参数类型为MultipartFile
+     * 的参数，任何SpringBoot就自动将传递给服务的文件数据赋值给这个参数
+     *
+     * @RequestParam 表示请求中的参数，将请求中的参数注入请求处理方法的某个参数上，
+     * 如果名称不一致则可以使用@RequestPara注解进行标记和映射
+     * @param session
+     * @param file
+     * @return
+     */
+    //设置上传文件的最大值
+    public static final int AVATAR_MAX_SIZE = 10 * 1024 * 1024;
+    //上传文件的类型
+    public static final List<String> AVATAR_TYPE;
+    static {
+        AVATAR_TYPE = new ArrayList<>();
+        AVATAR_TYPE.add("image/jpeg");
+        AVATAR_TYPE.add("image/png");
+        AVATAR_TYPE.add("image/bmp");
+        AVATAR_TYPE.add("image/gif");
+    }
+    @PostMapping("/change_avatar")
+    public JsonResult<String> changeAvatar(HttpSession session,
+                                           @RequestParam("file") MultipartFile file){
+        //判断文件是否为空
+        if(file.isEmpty()){
+            throw new FileEmptyException("文件为空");
+        }
+        if(file.getSize()>AVATAR_MAX_SIZE){
+            throw new FileSizeException("文件超出限制");
+        }
+        //判断文件的类型是否为我们规定的类型
+        String contentType = file.getContentType();
+        //如果集合包含某一个元素则返回true
+        if(!AVATAR_TYPE.contains(contentType)){
+            throw new FileTypeException("文件类型不支持");
+        }
+        //上传的文件  ../upload/文件.png
+        // session.getServletContext():获取上下文路径
+        String parent = session.getServletContext().getRealPath("upload");
+
+        //File对象指向这个路径,File是否存在
+        File dir = new File(parent);
+        if(!dir.exists()){//检测目录是否存在
+            dir.mkdir();//创建当前的目录
+        }
+        //获取到这个文件名称，UUID工具来生成一个新的字符串作为文件名
+        //例如：avatar01.png
+        String originalFilename = file.getOriginalFilename();
+        System.out.println("OriginalFilename=" + originalFilename);
+        //获取文件后缀
+        String suffix="";
+        int index = originalFilename.lastIndexOf(".");
+        suffix=originalFilename.substring(index);
+        String filename = UUID.randomUUID().toString().toUpperCase() + suffix;
+        //表示在dir这个文件下创建一个filename的文件
+        File dest = new File(dir, filename);//此时dest是一个空文件
+        //将参数file中数据写入到这个空文件中
+        try {
+            //将file文件中的数据写入到dest文件
+            file.transferTo(dest);
+        } catch (IOException e) {
+            throw new FileUploadIOException("文件读写异常");
+        }catch (Exception e){
+            throw new FileStateException("文件状态异常");
+        }
+        Integer uid = getuidFromSession(session);
+        String username = getUsernameFromSession(session);
+        //返回头像的路径/upload/test.png
+        String avater = "/upload/" + filename;
+        userService.changeAvatar(uid,avater,username);
+        //返回用户头像的路径给前端页面，将来用于头像展示
+        return new JsonResult<>(OK,avater);
     }
 }

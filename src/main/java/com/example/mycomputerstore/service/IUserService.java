@@ -43,9 +43,20 @@ public interface IUserService {
 
     /**
      * 更新用户的数据操作
-     * @param uid 用户的id
+     *
+     * @param uid      用户的id
      * @param username 用户的名称
-     * @param user 用户对象的数据
+     * @param user     用户对象的数据
      */
-    void changeInfo(Integer uid,String username,User user);
+    void changeInfo(Integer uid, String username, User user);
+
+    /**
+     * 修改用户头像
+     * @param uid 用户id
+     * @param avatar 用户头像的路径
+     * @param username 用户名称
+     */
+    void changeAvatar(Integer uid,
+                      String avatar,
+                      String username);
 }

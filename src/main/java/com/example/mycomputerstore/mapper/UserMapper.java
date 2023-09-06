@@ -3,6 +3,7 @@ package com.example.mycomputerstore.mapper;
 
 import com.example.mycomputerstore.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 
@@ -54,4 +55,17 @@ public interface UserMapper {
      */
     Integer updateInfoByUid(User user);
 
+    /**
+     * @param:是将映射文件中的#{}进行换名，如果不一致的时候
+     * 根据用户uid值来最高用户的头像
+     * @param uid
+     * @param avatar
+     * @param modifiedUser
+     * @param modifiedTime
+     * @return
+     */
+    Integer updateAvatarByUid(@Param("uid") Integer uid,
+                              @Param("avatar") String avatar,
+                              @Param("modifiedUser") String modifiedUser,
+                              @Param("modifiedTime") Date modifiedTime);
 }
