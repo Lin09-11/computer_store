@@ -42,7 +42,10 @@ public class BaseController {
         } else if(e instanceof UpdateException) {
             result.setState(5004);
             result.setMessage("更新数据的未知异常");
-        } else if(e instanceof FileEmptyException) {
+        } else if(e instanceof AddressCountLimitException) {
+            result.setState(5005);
+            result.setMessage("收货地址超出上限");
+        }  else if(e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("头像文件为空");
         } else if(e instanceof FileSizeException) {

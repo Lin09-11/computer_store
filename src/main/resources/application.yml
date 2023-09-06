@@ -10,3 +10,9 @@ spring:
       max-file-size: 10MB
       max-request-size: 15MB
 
+  # 设置用户收货地址的数量最大值
+  # Spring读取配置文件中的数据:@Value("${user.address.max-count }")
+user:
+  address:
+    max-count: 20
+
