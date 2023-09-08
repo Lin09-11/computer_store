@@ -24,8 +24,12 @@ public class IAddressServiceImpl implements IAddressService {
     @Autowired
     private IDistrictService districtService;
 
+    /**
+     * 为了方便日后修改最大收货地址数量,可以在配置文件
+     * application.properties中定义user.address.max-count=20
+     */
     @Value("${user.address.max-count}")
-    private Integer MaxAddress = 20;
+    private Integer MaxAddress ;
 
 
     @Override
@@ -38,7 +42,7 @@ public class IAddressServiceImpl implements IAddressService {
 
         //设置信息
         address.setUid(uid);
-        Integer isDelete = count == 0 ? 1 : 0;
+        Integer isDelete = count == 0 ? 1 : 0;//1表示默认收货地址,0反之
         address.setIsDefault(isDelete);
         address.setCreatedTime(new Date());
         address.setCreatedUser(username);
@@ -61,8 +65,34 @@ public class IAddressServiceImpl implements IAddressService {
         }
     }
 
+    /**
+     * 获取uid对应用户的所有地址信息,用于展示
+     *
+     * @param uid 用户uid
+     * @return 地址信息list
+     */
     @Override
     public List<Address> getByUid(Integer uid) {
-        return null;
+        List<Address> list = addressMapper.findByUid(uid);
+        for (Address address :list){
+            //因为就只需要展示4条数据，则将其他不用的不展示
+            address.setUid(null);
+            address.setAid(null);
+            address.setProvinceName(null);
+            address.setProvinceCode(null);
+            address.setCityName(null);
+            address.setCityCode(null);
+            address.setAreaName(null);
+            address.setAreaCode(null);
+            address.setZip(null);
+            address.setPhone(null);
+            address.setTel(null);
+            address.setCreatedTime(null);
+            address.setIsDefault(null);
+            address.setCreatedUser(null);
+            address.setModifiedTime(null);
+            address.setModifiedUser(null);
+        }
+        return list;
     }
 }

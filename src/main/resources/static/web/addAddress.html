@@ -291,13 +291,23 @@
 	<script type="text/javascript">
 <!--		下拉框的默认选项:select的下拉默认选中的是option-->
 		//value属性用于表示当前中国区域的code值
+/**因为清空后下拉列表的select标签没有option标签,所以需要设置一个默认的option标
+ * 签并给市,县加上该标签.option标签并不会把内容发送到后端,而是将value值发
+ * 送给后端,所以用value表示当前这个区域的code值
+ * */
 		let defaultOption="<option value='0'>---- 请选择 -----</option>"
 		/*
 		* 	打开页面自动加载
 		* */
 		$(document).ready(function (){
+			//加载省的数据罗列时代码量较多,建议定义在外部方法中,然后在这里调用定义的方法
 			showProvinceList();
 			//设置默认的"请选择“的值，作为控制的默认值
+			/**
+			 * select标签默认获取第一个option的内容填充到下拉列表中,所以即使加载
+			 * 页面时省区域的下拉列表中已经有了所有省但仍然会显示-----请选择-----
+			 * */
+			$("#province-list").append(defaultOption)
 			$("#city-list").append(defaultOption);
 			$("#area-list").append(defaultOption)
 		})
@@ -306,10 +316,17 @@
 			/*
 			* 	change()函数用于监听某一个控件是否发生改变，一旦发生改变就会触发参数的函数
 			* */
+
 			$("#province-list").change(function (){
 				//先获取行政区父代码
 				let parent = $("#province-list").val();
 				//1.先清空市区的select下拉列表中的所有option元素：【请选择】的默认数据
+				/**
+				 * 如果我选择了河南省洛阳市涧西区,然后又选择了河北省,此时需要
+				 * 将市,县下拉列表的所有option清除并显示内容-----请选择-----
+				 * empty()表示某标签的所有子标签(针对此页面来说select的子标
+				 * 签只有option)
+				 * */
 				$("city-list").empty();
 				$("#area-list").empty()
 				//2.填充默认值
@@ -317,8 +334,8 @@
 				$("#area-list").append(defaultOption)
 
 				//如果父亲code为0，没有选择
-				if(parent==0){
-					return;
+				if(parent==0){//如果继续程序,后面的ajax接收的json数据中的data是
+					return;//空集合[],进不了for循环,没有任何意义,所以直接在这里终止程序
 				}
 
 				$.ajax({
@@ -384,7 +401,7 @@
 				dataType:"JSON",
 				success(e){
 					if(e.state==200){
-						let list=e.data;
+						let list=e.data;//获取所有省对象的list集合
 						for(let i=0;i<list.length;i++){
 							// "<option value=''>name</option>"
 							let opt = "<option value='" + list[i].code + "'>" + list[i].name + "</option>";
