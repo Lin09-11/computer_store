@@ -124,4 +124,45 @@ public class IAddressServiceImpl implements IAddressService {
         }
 
     }
+
+
+    /**
+     * 删除用户选中的收货地址数据
+     * @param aid
+     * @param uid
+     * @param username
+     */
+    @Override
+    public void delete(Integer aid, Integer uid, String username) {
+        Address result = addressMapper.findByAid(aid);
+        if(result==null){
+            throw new AddressNotFoundException("收货地址数据不存在");
+        }
+        if(!result.getUid().equals(uid)){
+            throw new AccessDeniedException("非法数据访问");
+        }
+        Integer rows = addressMapper.deleteByAid(aid);
+        if(rows!=1){
+            throw new DeleteException("删除数据产生未知的异常");
+        }
+        Integer count = addressMapper.countAddress(uid);
+        if(count==0){//如果为0，表示用户将所有的地址数据都删除了，数据库没有地址数了
+            //直接终止程序
+            return;
+        }
+
+        //先判断当前要进行删除的地址是【默认地址】，才需要将其他地址设置为默认地址
+        if(result.getIsDefault()==1){//表示要删除的地址是【默认地址】
+
+            //查找删除后，数据中最后插入的一条数据
+            Address address = addressMapper.findLastModified(uid);
+            //将这条数据中的is_default字符的值设置为1
+            Integer newAddress
+                    = addressMapper.updateDefaultByAid(address.getAid(), username, new Date());
+
+            if(newAddress!=1){
+                throw new UpdateException("更新数据时产生未知的异常");
+            }
+        }
+    }
 }

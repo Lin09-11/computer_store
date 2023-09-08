@@ -31,9 +31,28 @@ public interface IAddressService {
 
     /**
      * 修改某一个条收货地址数据为默认收货地址
+     *
      * @param aid
      * @param uid
      * @param username
      */
-    void setDefault(Integer aid,Integer uid,String username);
+    void setDefault(Integer aid, Integer uid, String username);
+
+    /**
+     * 删除用户选中的收货地址数据
+     * @param aid
+     * @param uid
+     * @param username
+     *
+     * 该方法调用了一下mapper，所以才需要uid,aid,username等的参数
+     *  Integer countAddress(Integer uid);
+     *  List<Address> findByUid(Integer id);
+     *  Integer updateDefaultByAid(
+     *             @Value("aid") Integer aid,
+     *             @Value("modifiedUser") String modifiedUser,
+     *             @Value("modifiedTime") Date modifiedTime);
+     *  Integer deleteByAid(Integer aid);
+     *  Address findLastModified(Integer uid);
+     */
+    void delete(Integer aid,Integer uid,String username);
 }

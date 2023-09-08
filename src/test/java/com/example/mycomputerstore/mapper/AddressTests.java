@@ -51,4 +51,14 @@ public class AddressTests {
     public void updateDefaultByAid () {
         addressMapper.updateDefaultByAid(1,"管理员",new Date());
     }
+
+    @Test
+    public void deleteByUid(){
+        addressMapper.deleteByAid(4);
+    }
+
+    @Test
+    public void findLastModified(){
+        System.out.println(addressMapper.findLastModified(7));
+    }
 }

@@ -48,11 +48,32 @@ public interface AddressMapper {
     /**
      * 将用户当前选中的aid【正在填写的地址】设置为默认地址
      * 实际上，上面的findByAid和updateNonDefault是被updateDefaultByAid所调用的
+     *
      * @param aid
      * @return
      */
     Integer updateDefaultByAid(
-                               @Value("aid") Integer aid,
-                               @Value("modifiedUser") String modifiedUser,
-                               @Value("modifiedTime") Date modifiedTime);
+            @Value("aid") Integer aid,
+            @Value("modifiedUser") String modifiedUser,
+            @Value("modifiedTime") Date modifiedTime);
+
+
+    /**
+     * 根据收货地址id删除收货地址数据
+     *
+     * @param aid
+     * @return
+     */
+    Integer deleteByAid(Integer aid);
+
+    /**
+     * 根据用户uid查询当前用户最后一次被修改的收货地址数据
+     * @param uid
+     * @return
+     */
+    Address findLastModified(Integer uid);
+
 }
+
+
+

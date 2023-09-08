@@ -54,7 +54,7 @@ public class BaseController {
         } else if(e instanceof UpdateException) {
             result.setState(5008);
             result.setMessage("删除数据的未知异常");
-        }  else if(e instanceof FileEmptyException) {
+        } else if(e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("头像文件为空");
         } else if(e instanceof FileSizeException) {

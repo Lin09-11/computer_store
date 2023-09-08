@@ -40,6 +40,7 @@ public class AddressController extends BaseController {
 
     /**
      * 根据用户id展示用户已经填写的地址数据
+     *
      * @param session
      * @return
      */
@@ -55,7 +56,7 @@ public class AddressController extends BaseController {
     public JsonResult<Void> setDefault(
             @PathVariable("aid") Integer aid,
             HttpSession session
-    ){
+    ) {
         addressService.setDefault(
                 aid,
                 getuidFromSession(session),
@@ -65,4 +66,21 @@ public class AddressController extends BaseController {
         return new JsonResult<>(OK);
     }
 
+
+    /**
+     * 删除用户地址
+     *
+     * @param session
+     * @param aid
+     * @return
+     */
+    @PostMapping("/delete/{aid}")
+    public JsonResult<Void> delete(
+            HttpSession session,
+            @PathVariable("aid") Integer aid) {
+        addressService.delete(aid,
+                getuidFromSession(session),
+                getUsernameFromSession(session));
+        return new JsonResult<>(OK);
+    }
 }

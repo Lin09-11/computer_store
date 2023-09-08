@@ -56,4 +56,22 @@
         where aid=#{aid};
     </select>
 
+    <delete id="deleteByAid">
+        delete
+        from t_address
+        where aid=#{aid};
+    </delete>
+    
+    <select id="findLastModified" resultMap="AddressEntityMap">
+        select *
+        from t_address
+        where uid=#{uid}
+        order by modified_time desc
+        /*
+            注意点：这里我们要将最新的一条数据地址设置为默认地址
+            limit (n-1)*n ,pageSize
+        */
+        limit 0,1;
+    </select>
+
 </mapper>
