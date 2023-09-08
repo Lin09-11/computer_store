@@ -1,7 +1,9 @@
 package com.example.mycomputerstore.mapper;
 
 import com.example.mycomputerstore.entity.Address;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Date;
 import java.util.List;
 
 //收货地址持久层接口
@@ -28,4 +30,29 @@ public interface AddressMapper {
      * @return 收货地址数据
      */
     List<Address> findByUid(Integer id);
+
+    /**
+     * 根据aid查询收货地址数据
+     * @param aid
+     * @return
+     */
+    Address findByAid(Integer aid);
+
+    /**
+     * 根据用户的uid值来修改用户的收货地址设置为非默认
+     * @param uid
+     * @return 受到影响的行数
+     */
+    Integer updateNonDefault(Integer uid);
+
+    /**
+     * 将用户当前选中的aid【正在填写的地址】设置为默认地址
+     * 实际上，上面的findByAid和updateNonDefault是被updateDefaultByAid所调用的
+     * @param aid
+     * @return
+     */
+    Integer updateDefaultByAid(
+                               @Value("aid") Integer aid,
+                               @Value("modifiedUser") String modifiedUser,
+                               @Value("modifiedTime") Date modifiedTime);
 }

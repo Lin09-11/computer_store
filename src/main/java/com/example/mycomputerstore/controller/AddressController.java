@@ -5,10 +5,7 @@ import com.example.mycomputerstore.entity.Address;
 import com.example.mycomputerstore.service.IAddressService;
 import com.example.mycomputerstore.utitl.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -50,6 +47,22 @@ public class AddressController extends BaseController {
     public JsonResult<List<Address>> getByUid(HttpSession session) {
         Integer uid = getuidFromSession(session);
         List<Address> data = addressService.getByUid(uid);
-        return new JsonResult<>(OK,data);
+        return new JsonResult<>(OK, data);
     }
+
+    //RestFul风格请求
+    @PostMapping("/set_default/{aid}")
+    public JsonResult<Void> setDefault(
+            @PathVariable("aid") Integer aid,
+            HttpSession session
+    ){
+        addressService.setDefault(
+                aid,
+                getuidFromSession(session),
+                getUsernameFromSession(session)
+        );
+        System.out.println("OK");
+        return new JsonResult<>(OK);
+    }
+
 }

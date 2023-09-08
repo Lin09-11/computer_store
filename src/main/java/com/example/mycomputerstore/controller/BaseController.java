@@ -45,6 +45,15 @@ public class BaseController {
         } else if(e instanceof AddressCountLimitException) {
             result.setState(5005);
             result.setMessage("收货地址超出上限");
+        } else if(e instanceof AddressNotFoundException) {
+            result.setState(5006);
+            result.setMessage("用户收货地址未找到");
+        } else if(e instanceof AccessDeniedException) {
+            result.setState(5007);
+            result.setMessage("收货地址数据非法访问");
+        } else if(e instanceof UpdateException) {
+            result.setState(5008);
+            result.setMessage("删除数据的未知异常");
         }  else if(e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("头像文件为空");

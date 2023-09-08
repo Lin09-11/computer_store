@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -34,5 +35,20 @@ public class AddressTests {
     public void findByUid(){
         List<Address> list = addressMapper.findByUid(2);
         System.out.println(list);
+    }
+
+    @Test
+    public void findByAid () {
+        System.out.println(addressMapper.findByAid(5));
+    }
+
+    @Test
+    public void updateNonDefault () {
+        System.out.println(addressMapper.updateNonDefault(5));
+    }
+
+    @Test
+    public void updateDefaultByAid () {
+        addressMapper.updateDefaultByAid(1,"管理员",new Date());
     }
 }

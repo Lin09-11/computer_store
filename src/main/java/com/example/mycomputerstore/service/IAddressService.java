@@ -28,4 +28,12 @@ public interface IAddressService {
 48     * @return 地址信息list
      */
     List<Address> getByUid(Integer uid);
+
+    /**
+     * 修改某一个条收货地址数据为默认收货地址
+     * @param aid
+     * @param uid
+     * @param username
+     */
+    void setDefault(Integer aid,Integer uid,String username);
 }

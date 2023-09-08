@@ -22,4 +22,9 @@ public class AddressServiceTests {
         address.setName("女");
         addressService.addAddress(23,"管理员",address);
     }
+
+    @Test
+    public void setDefaultAddress() {
+        addressService.setDefault(6,7,"管理员");
+    }
 }

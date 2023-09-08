@@ -4,8 +4,7 @@ import com.example.mycomputerstore.entity.Address;
 import com.example.mycomputerstore.mapper.AddressMapper;
 import com.example.mycomputerstore.service.IAddressService;
 import com.example.mycomputerstore.service.IDistrictService;
-import com.example.mycomputerstore.service.ex.AddressCountLimitException;
-import com.example.mycomputerstore.service.ex.InsertException;
+import com.example.mycomputerstore.service.ex.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -76,8 +75,8 @@ public class IAddressServiceImpl implements IAddressService {
         List<Address> list = addressMapper.findByUid(uid);
         for (Address address :list){
             //因为就只需要展示4条数据，则将其他不用的不展示
-            address.setUid(null);
-            address.setAid(null);
+            //address.setUid(null);
+            //address.setAid(null);
             address.setProvinceName(null);
             address.setProvinceCode(null);
             address.setCityName(null);
@@ -94,5 +93,35 @@ public class IAddressServiceImpl implements IAddressService {
             address.setModifiedUser(null);
         }
         return list;
+    }
+
+    /**
+     * 修改某一个条收货地址数据为默认收货地址
+     * @param aid
+     * @param uid
+     * @param username
+     */
+    @Override
+    public void setDefault(Integer aid, Integer uid, String username) {
+        Address result = addressMapper.findByAid(aid);
+        if(result==null){
+            throw new AddressNotFoundException("收货地址不存在");
+        }
+        //检测当前获取到的收货地址数据的归属【用户登录是否正确】
+        if(!result.getUid().equals(uid)){
+            throw new AccessDeniedException("非法数据访问");
+        }
+        //先将所有的收货地址设置为非默认
+        Integer rows = addressMapper.updateNonDefault(uid);
+        if(rows<1){
+            System.out.println("1176");
+            throw new UpdateException("更新数据产生未知的异常");
+        }
+        //将用户选中某条数据设置为默认收货地址
+        rows = addressMapper.updateDefaultByAid(aid, username, new Date());
+        if(rows!=1){
+            throw new UpdateException("更新数据产生未知的异常");
+        }
+
     }
 }
