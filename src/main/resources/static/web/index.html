@@ -290,6 +290,47 @@
 			</div>
 		</footer>
 		<!--页脚结束-->
+	<script type="text/javascript">
+		$(document).ready(function (){
+			showHostList();
+		})
+
+		function showHostList(){
+			//整个热销商品的大div
+			$("#hot-list").empty();
+			//发起ajax请求
+			$.ajax({
+				url:"/product/hot_list",
+				type:"GET",
+				dataType:"JSON",
+				success(e){
+					//动态获取从后台获取的数据
+					let list = e.data;
+					console.log("count=",list.length)
+					//使用循环的方式将数据全部动态展示到div中
+					for(int i=0;i<list.length;i++){
+						console.log(list[i].title);
+						/*
+						* product.html?id=#{id}：	这里是为了点击超链接进入商品详情页时可以把商品id传给详情页,使两个页面形成联系
+						* ..#{image}collect.png：../images/portal/001GuangBo)FB60322/collect.png
+						* */
+						let html='<div class="col-md-12">\n' +
+								'<div class="col-md-7 text-row-2"><a href="product.html?id=#{id}">#{title}</a></div>\n' +
+								'<div class="col-md-2">¥23</div>\n' +
+								'<div class="col-md-3"><img src="..#{image}collect.png" class="img-responsive" /></div>\n' +
+								'</div>'
+						html = html.replace("#{id}", list[i].id);
+						html = html.replace("#{image}", list[i].image);
+						html = html.replace(/#{price}/g, list[i].price);
+						html=html.replace(/#{title}/,list[i].title);
+
+						//将页面重新渲染
+						$("#hot-list").append(html);
+					}
+				}
+			})
+		}
+	</script>
 	</body>
 
 </html>
