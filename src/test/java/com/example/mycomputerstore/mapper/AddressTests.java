@@ -1,6 +1,7 @@
 package com.example.mycomputerstore.mapper;
 
 import com.example.mycomputerstore.entity.Address;
+import com.example.mycomputerstore.entity.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,16 @@ import java.util.List;
 public class AddressTests {
     @Autowired
     private AddressMapper addressMapper;
+
+
+    @Autowired
+    ProductMapper productMapper;
+
+    @Test
+    public void test(){
+        List<Product> hotList = productMapper.findHotList();
+        System.out.println(hotList.toArray());
+    }
 
     @Test
     public void insert() {

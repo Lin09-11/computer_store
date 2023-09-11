@@ -10,9 +10,11 @@ spring:
       max-file-size: 10MB # 表示上传的文件最大是多少
       # 整个文件是放在request中发生给服务器，请求当中还会有消息头等其他携带消息
       max-request-size: 15MB
-
-  # 设置用户收货地址的数量最大值
+mybatis:
+  mapper-locations: classpath*:com/example/mycomputerstore/mapper/*.xml
+# 设置用户收货地址的数量最大值
   # Spring读取配置文件中的数据:@Value("${user.address.max-count }")
+  type-aliases-package: com.example.mycomputerstore.mapper
 user:
   address:
     max-count: 20

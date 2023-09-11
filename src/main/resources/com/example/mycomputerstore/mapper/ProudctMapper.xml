@@ -2,7 +2,6 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.example.mycomputerstore.mapper.ProductMapper">
     <resultMap id="ProductEntityMap" type="com.example.mycomputerstore.entity.Product">
         <id     column = "id"               property = "id"/>
@@ -16,9 +15,13 @@
     </resultMap>
     <!--查询热销商品的前四名：List<Product> findHotList()-->
     <select id="findHotList" resultMap="ProductEntityMap">
+        select * from t_product where status=1 order by priority desc limit 0,4;
+    </select>
+
+
+    <select id="findById" resultMap="ProductEntityMap">
         select *
         from t_product
-        where  status=1
-        order by priority desc   LIMIT 0,4
+        where id=#{id}
     </select>
 </mapper>

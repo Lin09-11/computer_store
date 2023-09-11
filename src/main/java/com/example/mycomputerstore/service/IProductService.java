@@ -11,4 +11,11 @@ public interface IProductService {
      * @return
      */
     List<Product> findHotList();
+
+    /**
+     * 显示商品详情信息
+     * @param id
+     * @return
+     */
+    Product findById(Integer id);
 }
