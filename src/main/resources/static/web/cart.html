@@ -303,7 +303,7 @@
 									'<td>#{title}#{msg}</td>\n' +
 									'<td>¥<span id="goodsPrice#{cid}">#{singlePrice}</span></td>\n' +
 									'<td>\n' +
-									'<input id="price-#{cid}"  type="button" value="-" class="num-btn" onclick="reduceNum(2)" />\n' +
+									'<input id="price-#{cid}"  type="button" value="-" class="num-btn" onclick="reduceNum(#{cid})" />\n' +
 									'<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">\n' +
 									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(#{cid})" />\n' +
 									'</td>\n' +
@@ -361,6 +361,29 @@
 						alert("增加购物车商品数据加载产生未知的异常"+xhr.status)
 					}
 				})
+			}
+
+			function reduceNum(cid) {
+				$.ajax({
+					url: "/cart/sub_num/"+cid,
+					type: "POST",
+					dataType: "JSON",
+					success: function(json) {
+						if (json.state == 200) {
+							// showCartList();
+							$("#goodsCount" + cid).val(json.data);
+							let price = $("#goodsPrice" + cid).html();
+							let totalPrice = price * json.data;
+							$("#goodsCast" + cid).html(totalPrice);
+						} else {
+							alert("修改商品数量失败！" + json.message);
+						}
+					},
+					error: function(xhr) {
+						alert("您的登录信息已经过期，请重新登录！HTTP响应码：" + xhr.status);
+						location.href = "login.html";
+					}
+				});
 			}
 			// $(function() {
 			// 	//返回链接

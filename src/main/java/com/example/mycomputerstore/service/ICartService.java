@@ -26,11 +26,20 @@ public interface ICartService {
     List<CartVO> getVOByUid(Integer uid);
 
     /**
-     *  更新用户的购物车数量的数据
-     *
+     * 更新用户的购物车数量的数据--增加
+     * <p>
      * 调用了updateNumByCid(cid,num,modifiedUser,modifiedTime)
-     *      和findByCid(cid)
-     *  Integer:返回的是最新的购物车数量
+     * 和findByCid(cid)
+     * Integer:返回的是最新的购物车数量
      */
-    Integer addNum(Integer cid,Integer uid,String username);
+    Integer addNum(Integer cid, Integer uid, String username);
+
+    /**
+     * 更新用户的购物车数据--减少
+     * @param cid
+     * @param uid
+     * @param username
+     * @return
+     */
+    Integer subNum(Integer cid,Integer uid,String username);
 }

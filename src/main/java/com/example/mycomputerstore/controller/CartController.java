@@ -49,10 +49,31 @@ public class CartController extends BaseController {
         return new JsonResult<>(OK,data);
     }
 
+    /**
+     * 在购物车列表中增加商品数量
+     * @param cid
+     * @param session
+     * @return
+     */
     @PostMapping("/{cid}/add_num")
     public JsonResult<Integer> addNum(@PathVariable("cid") Integer cid,
                                       HttpSession session){
         Integer data = cartService.addNum(cid,
+                getuidFromSession(session),
+                getUsernameFromSession(session));
+        return new JsonResult<>(OK,data);
+    }
+
+    /**
+     * 在购物车列表中减少商品数量
+     * @param cid
+     * @param session
+     * @return
+     */
+    @PostMapping("/sub_num/{cid}")
+    public JsonResult<Integer> subNum(@PathVariable("cid") Integer cid,
+                                      HttpSession session){
+        Integer data = cartService.subNum(cid,
                 getuidFromSession(session),
                 getUsernameFromSession(session));
         return new JsonResult<>(OK,data);

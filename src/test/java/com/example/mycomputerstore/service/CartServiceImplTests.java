@@ -17,4 +17,9 @@ public class CartServiceImplTests {
         cartService.addToCart(2,10000022,6,"管理员");
     }
 
+    @Test
+    public void subNum(){
+        cartService.subNum(3,7,"管理员");
+    }
+
 }

@@ -100,4 +100,29 @@ public class ICartServiceImpl implements ICartService {
 
         return num;
     }
+
+    /**
+     * 更新用户的购物车数据--减少
+     * @param cid
+     * @param uid
+     * @param username
+     * @return
+     */
+    @Override
+    public Integer subNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if(result==null){
+            throw new CartNotFoundException("购物车数据不存在");
+        }
+        if(!result.getUid().equals(uid)){
+            throw new AccessDeniedException("数据非法访问");
+        }
+        Integer num=result.getNum()-1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+
+        if(rows!=1){
+            throw new UpdateException("更新数据失败");
+        }
+        return num;
+    }
 }
