@@ -305,7 +305,7 @@
 									'<td>\n' +
 									'<input id="price-#{cid}"  type="button" value="-" class="num-btn" onclick="reduceNum(2)" />\n' +
 									'<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">\n' +
-									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(2)" />\n' +
+									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(#{cid})" />\n' +
 									'</td>\n' +
 									'<td><span id="goodsCast#{cid}">#{totalPrice}</span></td>\n' +
 									'<td>\n' +
@@ -329,6 +329,36 @@
 					},
 					error(xhr){
 						alert("购物车列表数据加载产生未知的异常"+xhr.status)
+					}
+				})
+			}
+			//添加商品按钮
+			function addNum(cid){
+				$.ajax({
+					url:"/cart/"+cid+"/add_num",
+					type: "POST",
+					dataType:"JSON",
+					success(e){
+						console.log(e.state)
+						if (e.state==200){
+							//<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">
+							//修改商品数量，
+							// val(): 因为这里使用val，是为了修改value的值
+							$("#goodsCount" + cid).val(e.data);
+							//<td>¥<span id="goodsPrice#{cid}">#{singlePrice}</span></td>
+							//商品单价
+							//html():选中所选元素的html，可能有html元素
+							let singlePrice=$("#goodsPrice"+cid).html();
+							let totalPrice=singlePrice*e.data;
+							//表示将总数加入页面中
+							//<td><span id="goodsCast#{cid}">#{totalPrice}</span></td>
+							$("#goodsCast"+cid).html(totalPrice);
+						}else{
+							alert("增加购物车数据失败"+e.message)
+						}
+					},
+					error(xhr){
+						alert("增加购物车商品数据加载产生未知的异常"+xhr.status)
 					}
 				})
 			}

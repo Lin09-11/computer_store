@@ -24,4 +24,13 @@ public interface ICartService {
      * @return
      */
     List<CartVO> getVOByUid(Integer uid);
+
+    /**
+     *  更新用户的购物车数量的数据
+     *
+     * 调用了updateNumByCid(cid,num,modifiedUser,modifiedTime)
+     *      和findByCid(cid)
+     *  Integer:返回的是最新的购物车数量
+     */
+    Integer addNum(Integer cid,Integer uid,String username);
 }

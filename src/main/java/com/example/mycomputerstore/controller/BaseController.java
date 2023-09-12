@@ -57,6 +57,9 @@ public class BaseController {
         } else if(e instanceof ProductNotFoundException) {
             result.setState(5009);
             result.setMessage("商品数据不存在");
+        } else if(e instanceof CartNotFoundException) {
+            result.setState(5010);
+            result.setMessage("购物车数据不存在");
         } else if(e instanceof FileEmptyException) {
             result.setState(6000);
             result.setMessage("头像文件为空");

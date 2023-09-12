@@ -6,6 +6,8 @@ import com.example.mycomputerstore.entity.Product;
 import com.example.mycomputerstore.mapper.CartMapper;
 import com.example.mycomputerstore.mapper.ProductMapper;
 import com.example.mycomputerstore.service.ICartService;
+import com.example.mycomputerstore.service.ex.AccessDeniedException;
+import com.example.mycomputerstore.service.ex.CartNotFoundException;
 import com.example.mycomputerstore.service.ex.InsertException;
 import com.example.mycomputerstore.service.ex.UpdateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +73,31 @@ public class ICartServiceImpl implements ICartService {
     @Override
     public List<CartVO> getVOByUid(Integer uid) {
         return cartMapper.findVOByUid(uid);
+    }
+
+    /**
+     *  更新用户的购物车数量的数据
+     *
+     * 调用了updateNumByCid(cid,num,modifiedUser,modifiedTime)
+     *      和findByCid(cid)
+     *  Integer:返回的是最新的购物车数量
+     */
+    @Override
+    public Integer addNum(Integer cid, Integer uid, String username) {
+        Cart result = cartMapper.findByCid(cid);
+        if(result == null) {
+            throw new CartNotFoundException("购物车数据不存在");
+        } else if(! result.getUid().equals(uid)) {
+            throw new AccessDeniedException("数据非法访问");
+        }
+
+        Integer num = result.getNum() + 1;
+        Integer rows = cartMapper.updateNumByCid(cid, num, username, new Date());
+
+        if(rows != 1) {
+            throw new UpdateException("更新数据失败");
+        }
+
+        return num;
     }
 }

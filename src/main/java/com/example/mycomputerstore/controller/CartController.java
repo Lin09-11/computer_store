@@ -48,4 +48,13 @@ public class CartController extends BaseController {
         List<CartVO> data = cartService.getVOByUid(getuidFromSession(session));
         return new JsonResult<>(OK,data);
     }
+
+    @PostMapping("/{cid}/add_num")
+    public JsonResult<Integer> addNum(@PathVariable("cid") Integer cid,
+                                      HttpSession session){
+        Integer data = cartService.addNum(cid,
+                getuidFromSession(session),
+                getUsernameFromSession(session));
+        return new JsonResult<>(OK,data);
+    }
 }

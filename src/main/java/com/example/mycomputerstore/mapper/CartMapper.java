@@ -49,4 +49,10 @@ public interface CartMapper {
      */
     List<CartVO> findVOByUid(Integer uid);
 
+    /**
+     * 新增购物车数据前，要先查看该用户的购物车数据是否存在
+     * @param cid
+     * @return
+     */
+    Cart findByCid(Integer cid);
 }
