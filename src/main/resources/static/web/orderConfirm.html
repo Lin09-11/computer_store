@@ -21,7 +21,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/orderConfirm.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="../js/orderConfirm.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -249,6 +249,66 @@
 
 		</footer>
 		<!--页脚结束-->
+
+	<script type="text/javascript">
+		$(document).ready(function (){
+			showCartList()
+		})
+		function showCartList(){
+			//进入该页面后先清空原来的数据
+			$("#cart-list").empty()
+			/*
+			* location.search.substr:是获取url中的数据
+			* 1:表示查找？之前
+			* 0：表示查找?之后【请求参数】
+			*
+			* 	这里要传data是因为后端接口需要传入参数，所以这里才要写
+			* */
+			console.log(location.search.substr(1),)
+			$.ajax({
+				url:"/cart/list",
+				type:"GET",
+				data:location.search.substr(1),
+				dataType:JSON,
+				success(e){
+					if(e.state==200){
+						let list=e.data;
+						//这里定义两个全局变量是为了后面可以对选中的商品的价格和数量进行统计
+						let allCount=0;
+						let allPrice=0;
+						for(let i=0;i<list.length;i++){
+							let tr='<tr>\n' +
+									'<td><img src="..#{image}collect.png" class="img-responsive" /></td>\n' +
+									'<td>#{title}</td>\n' +
+									'<td>¥<span>#{price}</span></td>\n' +
+									'<td>#{num}</td>\n' +
+									'<td><span>#{totalPrice}</span></td>\n' +
+									'</tr>'
+							tr=tr.replace(/#{image}/g,list[i].image)
+							tr=tr.replace("#{title}",list[i].title)
+							tr=tr.replace(/#{price}/,list[i].price)
+							tr=tr.replace(/#{num}/g,list[i].nume)
+							tr=tr.replace("#{totalPrice}",list[i].price*list[i].num)
+
+							$("#cart-list").append(tr)
+
+							//统计数据，方便在外面调用
+							allCount+=list[i].num;
+							allPrice+=list[i].price*list[i].num
+
+						}
+
+						//更新支付页面的总价和总件数
+						$("#all-count").html(allCount)
+						$("#all-price").html(allPrice)
+					}
+				},
+				error(xhr){
+					alert("增加购物车商品数据加载产生未知的异常"+xhr.status)
+				}
+			})
+		}
+	</script>
 	</body>
 
 </html>

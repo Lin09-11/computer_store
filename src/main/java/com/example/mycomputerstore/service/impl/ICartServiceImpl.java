@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -124,5 +125,31 @@ public class ICartServiceImpl implements ICartService {
             throw new UpdateException("更新数据失败");
         }
         return num;
+    }
+
+
+    /**
+     * 将用户在购物车页面中勾选中的数据传递给"结算“页面
+     *
+     * @param uid
+     * @param cids
+     * @return
+     */
+    @Override
+    public List<CartVO> getVOByCid(Integer uid, Integer[] cids) {
+        List<CartVO> list = cartMapper.findVOByCid(cids);
+        //循环遍历获取到的数据，查看该数据是否与目前传入的uid是一致的
+        Iterator<CartVO> it = list.iterator();
+        while (it.hasNext()){//如果循环没有遍历结束
+            //因为it一开始是指向下标为0，所以一上来就要next，才可以指向下一个
+            CartVO cartVO = it.next();
+            //进行判断用户对应是否正确
+            if (!cartVO.getUid().equals(uid)) {//表示当前数据不属于当前的用户
+                //从集合中移除这个元素
+                list.remove(cartVO);
+            }
+        }
+
+        return list;
     }
 }

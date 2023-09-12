@@ -36,10 +36,21 @@ public interface ICartService {
 
     /**
      * 更新用户的购物车数据--减少
+     *
      * @param cid
      * @param uid
      * @param username
      * @return
      */
-    Integer subNum(Integer cid,Integer uid,String username);
+    Integer subNum(Integer cid, Integer uid, String username);
+
+
+    /**
+     * 将用户在购物车页面中勾选中的数据传递给"结算“页面
+     * @param uid
+     * @param cids
+     * @return
+     */
+    List<CartVO> getVOByCid(Integer uid,
+            Integer[] cids);
 }

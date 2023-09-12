@@ -55,4 +55,13 @@ public interface CartMapper {
      * @return
      */
     Cart findByCid(Integer cid);
+
+
+    /**
+     * 用于：显示勾选购物车数据
+     * 根据购物车的id将用户选中的商品传递给“结算”页面
+     * @param cids :因为传递过来的商品数量可能不只一条
+     * @return
+     */
+    List<CartVO> findVOByCid(Integer[] cids);
 }

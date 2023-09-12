@@ -45,4 +45,11 @@ public class CartMapperTests {
     public void findByCid(){
         System.out.println(cartMapper.findByCid(2));
     }
+
+    @Test
+    public void findVOByCid(){
+        Integer[] cids={1,2,3,45,6,9};
+        System.out.println(cartMapper.findVOByCid(cids));
+
+    }
 }

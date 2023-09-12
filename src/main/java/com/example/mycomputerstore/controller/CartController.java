@@ -78,4 +78,17 @@ public class CartController extends BaseController {
                 getUsernameFromSession(session));
         return new JsonResult<>(OK,data);
     }
+
+    /**
+     * 将用户在购物车选中的商品通过”结算“传递到结算页面
+     * @param cids
+     * @param session
+     * @return
+     */
+    @GetMapping("/list")
+    public JsonResult<List<CartVO>> getVOByCid(Integer[] cids,
+                                               HttpSession session){
+        List<CartVO> data = cartService.getVOByCid(getuidFromSession(session), cids);
+        return new JsonResult<>(OK,data);
+    }
 }

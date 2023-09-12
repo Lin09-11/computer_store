@@ -314,12 +314,13 @@
 									+ '<div class="col-md-2">#{price}</div>'
 									+ '<div class="col-md-3"><img src="..#{image}collect.png" class="img-responsive" /></div>'
 									+ '</div>';
-
+							//替换上面的数据
 							html = html.replace(/#{id}/g, list[i].id);
 							html = html.replace(/#{title}/g, list[i].title);
 							html = html.replace(/#{price}/g, list[i].price);
 							html = html.replace(/#{image}/g, list[i].image);
 
+							//将动态获取的数据替换掉原来的静态数据
 							$("#hot-list").append(html);
 						}
 					}
