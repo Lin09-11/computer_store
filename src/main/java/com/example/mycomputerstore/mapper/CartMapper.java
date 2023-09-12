@@ -1,11 +1,13 @@
 package com.example.mycomputerstore.mapper;
 
 
+import com.example.mycomputerstore.VO.CartVO;
 import com.example.mycomputerstore.entity.Cart;
 import org.apache.ibatis.annotations.Param;
 
 
 import java.util.Date;
+import java.util.List;
 
 public interface CartMapper {
 
@@ -39,4 +41,12 @@ public interface CartMapper {
     Cart findByUidAndPid(
             @Param("uid") Integer uid,
             @Param("pid") Integer pid);
+
+    /**
+     * 根据用户的id和商品的id来查询购物车
+     * @param uid
+     * @return
+     */
+    List<CartVO> findVOByUid(Integer uid);
+
 }

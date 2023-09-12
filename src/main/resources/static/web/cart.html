@@ -20,7 +20,7 @@
 		<link rel="stylesheet" type="text/css" href="../css/top.css" />
 		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
 		<link rel="stylesheet" type="text/css" href="../css/cart.css" />
-		<script src="../js/cart.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="../js/cart.js" type="text/javascript" charset="utf-8"></script>-->
 	</head>
 
 	<body>
@@ -174,7 +174,7 @@
 							</div>
 							<div>
 								<span class="pull-right">
-								<input type="submit" value="  结  算  " class="btn btn-primary btn-lg link-account" />
+								<input type="button" value="  结  算  " class="btn btn-primary btn-lg link-account" />
 							</span>
 							</div>
 						</form>
@@ -268,12 +268,76 @@
 		</footer>
 		<!--页脚结束-->
 		<script type="text/javascript">
-			$(function() {
-				//返回链接
-				$(".link-account").click(function() {
-					location.href = "orderConfirm.html";
-				})
+			/*
+			* 读取当前页面的加载
+			* */
+			$(document).ready(function (){
+				//展示购物车列表
+				showCartList()
 			})
+
+			//展示购物车列表
+			function showCartList(){
+				//清空tbody
+				$("#cart-list").empty()
+				$.ajax({
+					url:"/cart",
+					type:"GET",
+					dataType:"JSON",
+					success: function (e) {
+						console.log(e.data)
+						//获取数据
+						let list = e.data;
+						for (let i=0;i<list.length;i++) {
+							/*
+							*  name="cids" value="#{cid}":为了传到“确认支付”页面做准备
+							* ..#{image}collect.png==数据库中的样式【/images/portal/00GuangBo1040A5GBR0731/】
+							* 	实际上需要的是【../images/portal/00GuangBo1040A5GBR0731/collect.png】
+							*   msg:表示真实价格
+							* */
+							let tr = '<tr>\n' +
+									'<td>\n' +
+									'<input name="cids" value="#{cid}" type="checkbox" class="ckitem" />\n' +
+									'</td>\n' +
+									'<td><img src="..#{image}collect.png" class="img-responsive" /></td>\n' +
+									'<td>#{title}#{msg}</td>\n' +
+									'<td>¥<span id="goodsPrice#{cid}">#{singlePrice}</span></td>\n' +
+									'<td>\n' +
+									'<input id="price-#{cid}"  type="button" value="-" class="num-btn" onclick="reduceNum(2)" />\n' +
+									'<input id="goodsCount#{cid}" type="text" size="2" readonly="readonly" class="num-text" value="#{num}">\n' +
+									'<input id="price+#{cid}" class="num-btn" type="button" value="+" onclick="addNum(2)" />\n' +
+									'</td>\n' +
+									'<td><span id="goodsCast#{cid}">#{totalPrice}</span></td>\n' +
+									'<td>\n' +
+									'<input type="button" onclick="delCartItem(this)" class="cart-del btn btn-default btn-xs" value="删除" />\n' +
+									'</td>\n' +
+									'</tr>'
+							tr=tr.replace(/#{cid}/g,list[i].cid);
+							tr=tr.replace(/#{image}/g,list[i].image);
+							tr=tr.replace(/#{title}/g,list[i].title)
+							//当前商品的真实的价格
+							tr=tr.replace(/#{msg}/g,list[i].realPrice)
+							tr=tr.replace("#{num}",list[i].num)
+							//单价
+							tr=tr.replace("#{singlePrice}",list[i].price)
+							//总价
+							tr=tr.replace(/#{totalPrice}/g,list[i].price*list[i].num)
+
+							//将数据加入表中
+							$("#cart-list").append(tr);
+						}
+					},
+					error(xhr){
+						alert("购物车列表数据加载产生未知的异常"+xhr.status)
+					}
+				})
+			}
+			// $(function() {
+			// 	//返回链接
+			// 	$(".link-account").click(function() {
+			// 		location.href = "orderConfirm.html";
+			// 	})
+			// })
 		</script>
 	</body>
 

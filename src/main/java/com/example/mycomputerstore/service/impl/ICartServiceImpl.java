@@ -1,5 +1,6 @@
 package com.example.mycomputerstore.service.impl;
 
+import com.example.mycomputerstore.VO.CartVO;
 import com.example.mycomputerstore.entity.Cart;
 import com.example.mycomputerstore.entity.Product;
 import com.example.mycomputerstore.mapper.CartMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -59,5 +61,15 @@ public class ICartServiceImpl implements ICartService {
                 throw new UpdateException("未知异常 在 更新数据");
             }
         }
+    }
+
+    /**
+     * 根据用户id查询购物车
+     * @param uid
+     * @return
+     */
+    @Override
+    public List<CartVO> getVOByUid(Integer uid) {
+        return cartMapper.findVOByUid(uid);
     }
 }

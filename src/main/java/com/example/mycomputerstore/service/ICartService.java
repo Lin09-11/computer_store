@@ -1,6 +1,9 @@
 package com.example.mycomputerstore.service;
 
+import com.example.mycomputerstore.VO.CartVO;
 import com.example.mycomputerstore.entity.Cart;
+
+import java.util.List;
 
 public interface ICartService {
 
@@ -12,5 +15,13 @@ public interface ICartService {
      * @param amount 增加的数量
      * @param username 当前登录的用户名
      */
-    void addToCart(Integer uid, Integer pid, Integer amount, String username);
+    void addToCart(Integer uid, Integer pid,
+                   Integer amount, String username);
+
+    /**
+     * 根据用户id查询购物车
+     * @param uid
+     * @return
+     */
+    List<CartVO> getVOByUid(Integer uid);
 }
