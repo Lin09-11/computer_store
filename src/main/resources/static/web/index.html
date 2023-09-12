@@ -306,6 +306,9 @@
 						var list = json.data;
 						for (var i = 0; i < list.length; i++) {
 							console.log(list[i].title);//调试用
+							/*
+							* id=#{id}：将id传递给后端，方便后面的商品详情信息的展示
+							* */
 							var html = '<div class="col-md-12">'
 									+ '<div class="col-md-7 text-row-2"><a href="product.html?id=#{id}">#{title}</a></div>'
 									+ '<div class="col-md-2">#{price}</div>'
